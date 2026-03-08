@@ -164,8 +164,8 @@ Use `FLAG_NO_SHORT_NAME` for the `short_name` parameter if you don't need a shor
 
 This project draws inspiration from the following YouTube videos:
 
-- [Parsing Command Line Arguments in C (part 1)](https://www.youtube.com/watch?v=gtk3RZHwJUA)
-- [Parsing Command Line Arguments in C (part 2)](https://www.youtube.com/watch?v=4JpgbdESzIU)
+- [Insane Shadow Data Trick in C - Tsoding](https://www.youtube.com/watch?v=gtk3RZHwJUA)
+- [Stealing ideas from Go - Tsoding](https://www.youtube.com/watch?v=4JpgbdESzIU)
 
 ## License
 
