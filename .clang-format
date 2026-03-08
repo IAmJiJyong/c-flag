@@ -1,0 +1,35 @@
+BasedOnStyle: Mozilla
+
+IndentWidth: 8
+TabWidth: 8
+UseTab: Never
+ColumnLimit: 120
+
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+
+AlignConsecutiveBitFields:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+
+AlignArrayOfStructures: Left
+IndentPPDirectives: AfterHash
+
+BraceWrapping:
+  AfterFunction: true
+  AfterEnum: true
+  AfterStruct: true
+  AfterClass: true
