@@ -45,10 +45,12 @@ flag_list_len(char** list)
         return ((FlagListHeader*)(list)-1)->count;
 }
 
+// FLAG_X(name, type, field);
 #define FLAG_TYPE_LIST                                                                                                 \
         FLAG_X(BOOL, bool, bool)                                                                                       \
         FLAG_X(INT32, int32_t, int32)                                                                                  \
         FLAG_X(INT64, int64_t, int64)                                                                                  \
+        FLAG_X(SIZE, size_t, size)                                                                                     \
         FLAG_X(FLOAT, float, float)                                                                                    \
         FLAG_X(DOUBLE, double, double)                                                                                 \
         FLAG_X(STRING, char*, string)                                                                                  \
@@ -62,7 +64,7 @@ typedef enum
           COUNT_FLAG_TYPES,
 } FlagType;
 
-_Static_assert(COUNT_FLAG_TYPES == 7, "Exhaustive FlagValue definition");
+_Static_assert(COUNT_FLAG_TYPES == 8, "Exhaustive FlagValue definition");
 
 typedef union
 {
@@ -141,6 +143,35 @@ __flag_get_ref(Flag* flag)
         return &flag->value;
 }
 
+bool
+__flag_size_suffix(char* suffix, unsigned long long int* result)
+{
+        if (strcmp(suffix, "KB") == 0) {
+                (*result) *= 1000ULL;
+        } else if (strcmp(suffix, "KiB") == 0 || strcmp(suffix, "K") == 0) {
+                (*result) *= 1024ULL;
+        } else if (strcmp(suffix, "MB") == 0) {
+                (*result) *= 1000ULL * 1000ULL;
+        } else if (strcmp(suffix, "MiB") == 0 || strcmp(suffix, "M") == 0) {
+                (*result) *= 1024ULL * 1024ULL;
+        } else if (strcmp(suffix, "GB") == 0) {
+                (*result) *= 1000ULL * 1000ULL * 1000ULL;
+        } else if (strcmp(suffix, "GiB") == 0 || strcmp(suffix, "G") == 0) {
+                (*result) *= 1024ULL * 1024ULL * 1024ULL;
+        } else if (strcmp(suffix, "TB") == 0) {
+                (*result) *= 1000ULL * 1000ULL * 1000ULL * 1000ULL;
+        } else if (strcmp(suffix, "TiB") == 0 || strcmp(suffix, "T") == 0) {
+                (*result) *= 1024ULL * 1024ULL * 1024ULL * 1024ULL;
+        } else if (strcmp(suffix, "PB") == 0) {
+                (*result) *= 1000ULL * 1000ULL * 1000ULL * 1000ULL * 1000ULL;
+        } else if (strcmp(suffix, "PiB") == 0 || strcmp(suffix, "P") == 0) {
+                (*result) *= 1024ULL * 1024ULL * 1024ULL * 1024ULL * 1024ULL;
+        } else if (strcmp(suffix, "") != 0) {
+                return false;
+        }
+        return true;
+}
+
 int
 flag_rest_argc();
 char**
@@ -165,6 +196,10 @@ int64_t*
 flag_context_int64(FlagContext* flag_context, const char* name, int64_t def, const char* desc, char short_name);
 int64_t*
 flag_int64(const char* name, int64_t default_value, const char* desc, char short_name);
+size_t*
+flag_context_size(FlagContext* flag_context, const char* name, size_t default_value, const char* desc, char short_name);
+size_t*
+flag_size(const char* name, size_t default_value, const char* desc, char short_name);
 float*
 flag_context_float(FlagContext* flag_context, const char* name, float default_value, const char* desc, char short_name);
 float*
@@ -673,6 +708,22 @@ int64_t*
 flag_int64(const char* name, int64_t default_value, const char* desc, char short_name)
 {
         return flag_context_int64(&flag_global_context, name, default_value, desc, short_name);
+}
+
+size_t*
+flag_context_size(FlagContext* flag_context, const char* name, size_t default_value, const char* desc, char short_name)
+{
+        Flag* flag                  = __flag_new(flag_context, FLAG_SIZE, name, desc);
+        flag->value.as_size         = default_value;
+        flag->default_value.as_size = default_value;
+        flag->short_name            = short_name;
+        return &flag->value.as_size;
+}
+
+size_t*
+flag_size(const char* name, size_t default_value, const char* desc, char short_name)
+{
+        return flag_context_size(&flag_global_context, name, default_value, desc, short_name);
 }
 
 float*
